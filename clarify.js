@@ -68,8 +68,9 @@ const initializeTab = (tab) => {
 
   if (tab.url?.startsWith(VALID_URL)) {
     console.log("Tab initialized!", tab);
-    browser.action.setBadgeText({ tabId: tab.id, text: "Init" });
-    browser.action.setBadgeBackgroundColor({ tabId: tab.id, color: "yellow" });
+    setBadgeText(false, tab.id);
+  } else {
+    browser.action.disable(tab.id);
   }
 };
 
@@ -79,14 +80,23 @@ browser.tabs.query({}).then((tabs) => {
   }
 });
 
-browser.tabs.onUpdated.addListener((tab) => {
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   initializeTab(tab);
 });
 
 browser.action.onClicked.addListener((tab) => {
   if (!initialized) {
+    browser.action.setBadgeText({
+      tabId: tab.id,
+      text: "...",
+    });
+    browser.action.setBadgeBackgroundColor({
+      tabId: tab.id,
+      color: "yellow",
+    });
+    setTimeout(() => toggleObserver(tab), 800);
     initialized = true;
-    setBadgeText(false, tab.id);
+  } else {
+    toggleObserver(tab);
   }
-  toggleObserver(tab);
 });
