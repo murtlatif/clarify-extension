@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "lint": "web-ext lint",
+    "build": "web-ext build -o",
+    "start:firefox": "web-ext run -f \"C:\\Program Files\\Firefox Developer Edition\\firefox.exe\" --source-dir ./",
+    "sign": "web-ext sign"
+  },
+  "devDependencies": {
+    "web-ext": "^7.6.2"
+  }
+}

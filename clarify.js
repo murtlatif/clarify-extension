@@ -10,15 +10,17 @@ const VALID_URL = "https://clarity.microsoft.com/";
 let observerEnabled = false;
 let initialized = false;
 
+const setBadgeTextAndColor = (tabId, text, color) => {
+  browser.action.setBadgeText({ tabId, text });
+  browser.action.setBadgeBackgroundColor({ tabId, color });
+};
+
 const setBadgeText = (enabled, tabId) => {
-  browser.action.setBadgeText({
+  setBadgeTextAndColor(
     tabId,
-    text: enabled ? BADGE_TEXT_ON : BADGE_TEXT_OFF,
-  });
-  browser.action.setBadgeBackgroundColor({
-    tabId,
-    color: enabled ? BADGE_COLOR_ON : BADGE_COLOR_OFF,
-  });
+    enabled ? BADGE_TEXT_ON : BADGE_TEXT_OFF,
+    enabled ? BADGE_COLOR_ON : BADGE_COLOR_OFF
+  );
 };
 
 const errorBadgeText = (tabId) => {
@@ -68,8 +70,9 @@ const initializeTab = (tab) => {
 
   if (tab.url?.startsWith(VALID_URL)) {
     console.log("Tab initialized!", tab);
-    browser.action.setBadgeText({ tabId: tab.id, text: "Init" });
-    browser.action.setBadgeBackgroundColor({ tabId: tab.id, color: "yellow" });
+    setBadgeText(false, tab.id);
+  } else {
+    browser.action.disable(tab.id);
   }
 };
 
@@ -79,14 +82,16 @@ browser.tabs.query({}).then((tabs) => {
   }
 });
 
-browser.tabs.onUpdated.addListener((tab) => {
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   initializeTab(tab);
 });
 
 browser.action.onClicked.addListener((tab) => {
   if (!initialized) {
+    setBadgeTextAndColor(tab.id, "...", "yellow");
+    setTimeout(() => toggleObserver(tab), 800);
     initialized = true;
-    setBadgeText(false, tab.id);
+  } else {
+    toggleObserver(tab);
   }
-  toggleObserver(tab);
 });
