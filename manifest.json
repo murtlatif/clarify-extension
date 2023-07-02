@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Clarify",
-    "version": "0.1",
+    "version": "0.1.1",
     "description": "Fixes resource loading issues with Microsoft Clarity.",
     "author": "Murtaza Latif <taaz.murr@gmail.com>",
     "icons": {
@@ -24,12 +24,21 @@
             ],
             "js": [
                 "observer.js"
-            ]
+            ],
+            "run_at": "document_start"
         }
+    ],
+    "host_permissions": [
+        "https://clarity.microsoft.com/*"
     ],
     "permissions": [
         "tabs",
         "activeTab",
         "scripting"
-    ]
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "clarify@murt"
+        }
+    }
 }
