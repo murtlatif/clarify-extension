@@ -15,7 +15,7 @@ const initializeObserver = () => {
   const clarityObserver = new MutationObserver((mutationsList) => {
     const iframe = document.querySelector("iframe");
     let resources = iframe.contentDocument.querySelectorAll(
-      'link[href*="https://clarity.microsoft.com/external/v2/resources"]'
+      'link[href*="https://tm-cachedresources.trafficmanager.net/cached-resources/api/resources/"]'
     );
     console.log({ iframe, cd: iframe.contentDocument, resources });
     for (let resource of resources) {
